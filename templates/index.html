@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speech Emotion Recognition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <h1>🎧 Speech Emotion Recognition</h1>
+        <p class="subtitle">Detect emotion from speech audio</p>
+    </header>
+
+    <!-- MODE TOGGLE -->
+    <div class="mode-toggle">
+        <label>
+            <input type="radio" name="mode" value="single" checked>
+            🎯 Single Emotion
+        </label>
+        <label>
+            <input type="radio" name="mode" value="multi">
+            ⏱️ Multiple Emotions (Timeline)
+        </label>
+    </div>
+
+    <!-- UPLOAD -->
+    <label class="upload-box">
+        📂 Click to upload .wav audio
+        <input type="file" id="audioFile" accept=".wav">
+        <div class="file-name" id="fileName">No file selected</div>
+    </label>
+
+    <!-- BUTTON -->
+    <button type="button" id="analyzeBtn">Analyze Emotion</button>
+
+    <!-- LOADER -->
+    <div class="loader" id="loader">
+        ⏳ Analyzing speech...
+    </div>
+
+    <!-- RESULT -->
+    <div class="result" id="resultBox"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        MFCC + LSTM | Flask API
+    </footer>
+
+</div>
+
+<!-- ================= SCRIPT (MUST BE AT BOTTOM) ================= -->
+<script>
+    // ELEMENTS
+    var fileInput = document.getElementById("audioFile");
+    var fileName = document.getElementById("fileName");
+    var loader = document.getElementById("loader");
+    var resultBox = document.getElementById("resultBox");
+    var analyzeBtn = document.getElementById("analyzeBtn");
+
+    // EMOJI MAP
+    var emotionEmoji = {
+        happy: "😊",
+        sad: "😢",
+        angry: "😠",
+        fearful: "😨",
+        calm: "😌",
+        disgust: "🤢",
+        neutral: "😐",
+        surprised: "😲"
+    };
+
+    // FILE NAME DISPLAY
+    fileInput.addEventListener("change", function () {
+        if (fileInput.files.length > 0) {
+            fileName.innerText = fileInput.files[0].name;
+        } else {
+            fileName.innerText = "No file selected";
+        }
+    });
+
+    // BUTTON CLICK
+    analyzeBtn.addEventListener("click", function () {
+        predictEmotion();
+    });
+
+    // MAIN FUNCTION
+    function predictEmotion() {
+
+        if (!fileInput.files.length) {
+            alert("Please upload a .wav file");
+            return;
+        }
+
+        var mode = document.querySelector('input[name="mode"]:checked').value;
+        var endpoint = (mode === "single") ? "/predict" : "/predict_chunks";
+
+        loader.style.display = "block";
+        resultBox.style.display = "none";
+        resultBox.innerHTML = "";
+
+        var formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        fetch(endpoint, {
+            method: "POST",
+            body: formData
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            loader.style.display = "none";
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // SINGLE MODE
+            if (mode === "single") {
+                var emoji = emotionEmoji[data.emotion] || "🎭";
+
+                resultBox.innerHTML =
+                    "<div class='emotion'>" +
+                    emoji + " Emotion: " +
+                    data.emotion.toUpperCase() +
+                    "</div>" +
+                    "<div class='emotion-note'>" +
+                    "Dominant emotion of the entire speech" +
+                    "</div>";
+            }
+
+            // MULTI MODE
+            if (mode === "multi") {
+                var html =
+                    "<div class='emotion-note'>" +
+                    "📊 Emotion Timeline (3-second chunks)" +
+                    "</div>";
+
+                for (var i = 0; i < data.results.length; i++) {
+                    var item = data.results[i];
+                    var emoji2 = emotionEmoji[item.emotion] || "🎭";
+
+                    html +=
+                        "<div class='timeline-item'>" +
+                        "<span>" + item.start_time + " – " + item.end_time + "</span>" +
+                        "<span>" + emoji2 + " " + item.emotion + "</span>" +
+                        "</div>";
+                }
+
+                resultBox.innerHTML = html;
+            }
+
+            resultBox.style.display = "block";
+        })
+        .catch(function (error) {
+            loader.style.display = "none";
+            alert("Request failed. Check console.");
+            console.error(error);
+        });
+    }
+</script>
+
+</body>
+</html>

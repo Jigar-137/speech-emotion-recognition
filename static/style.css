@@ -1,0 +1,282 @@
+/* =====================================================
+   GLOBAL RESET & BASE SETTINGS
+===================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+.container {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 18px;
+    padding: 32px 28px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 22px;
+}
+
+/* =====================================================
+   UPLOAD SECTION
+===================================================== */
+.upload-section {
+    margin-bottom: 18px;
+}
+
+/* Upload Box */
+.upload-box {
+    border: 2px dashed #9aa1ff;
+    border-radius: 14px;
+    padding: 26px 18px;
+    background: #fafbff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.upload-box:hover {
+    border-color: #667eea;
+    background: #f1f3ff;
+}
+
+.upload-box input {
+    display: none;
+}
+
+/* Selected File Name */
+.file-name {
+    font-size: 13px;
+    color: #444;
+    background: #eef1ff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    max-width: 100%;
+    word-break: break-all;
+}
+
+/* =====================================================
+   BUTTON
+===================================================== */
+button {
+    margin-top: 18px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #667eea, #5a67d8);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px rgba(102, 126, 234, 0.35);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* =====================================================
+   LOADER
+===================================================== */
+.loader {
+    display: none;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #555;
+    animation: pulse 1.2s infinite;
+}
+
+/* =====================================================
+   RESULT BOX
+===================================================== */
+.result {
+    display: none;
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #eef1ff, #f9faff);
+    animation: slideUp 0.4s ease-in-out;
+}
+
+.emotion {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.emotion-note {
+    font-size: 13px;
+    color: #666;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+footer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: #777;
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+@media (max-width: 480px) {
+
+    .container {
+        padding: 26px 20px;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+/* =====================
+   MODE TOGGLE
+===================== */
+.mode-toggle {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: #444;
+}
+
+.mode-toggle label {
+    cursor: pointer;
+}
+
+.mode-toggle input {
+    margin-right: 6px;
+}
+
+/* =====================
+   TIMELINE (MULTI MODE)
+===================== */
+.timeline-item {
+    display: flex;
+    justify-content: space-between;
+    background: #eef1ff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.timeline-item .time {
+    color: #555;
+}
+
+.timeline-item .emotion-text {
+    font-weight: 500;
+}
+/* =========================
+   EMOTION TIMELINE CHART
+========================= */
+.timeline-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.timeline-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    animation: slideUp 0.3s ease-in-out;
+}
+
+.bar-time {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.bar-emotion {
+    font-weight: 600;
+}
